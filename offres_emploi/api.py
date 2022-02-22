@@ -162,7 +162,7 @@ class Api:
         """
         referentiel_endpoint = "{}/{}".format(REFERENTIEL_ENDPOINT, referentiel)
 
-        print('Making request with params {}'.format(params))
+        #print('Making request with params {}'.format(params))
 
         r = self.session.get(
             url=referentiel_endpoint,
