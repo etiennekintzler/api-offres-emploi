@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="api-offres-emploi", 
-    version="0.0.1",
+    version="0.0.2",
     author="Etienne Kintzler",
     author_email="etienne.kintzler@gmail.com",
     description="Python interface to 'API Offres d'emploi v2' (Pole Emploi job search API)",

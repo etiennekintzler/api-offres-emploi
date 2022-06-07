@@ -19,7 +19,7 @@ class Api:
     Class to authentificate and use the methods of the 'API Offres emploi v2' from Emploi Store (Pole Emploi).
     """
 
-    def __init__(self, client_id, client_secret, proxies=None):
+    def __init__(self, client_id, client_secret, verbose=False, proxies=None):
         """
         Constructor to authentificate to 'Offres d'emploi v2'. Authentification is done using OAuth client credential grant. 'client_id' and 'client_secret' must be specified.
 
@@ -29,6 +29,8 @@ class Api:
         :type client_id: str
         :param client_secret: the client secret
         :type client_secret: str
+        :param verbose: whether to add verbosity
+        :type verbose: bool
         :param proxies: (optional) The proxies configuration
         :type proxies: dict with keys 'http' and/or 'https'
         :returns: None
@@ -49,6 +51,7 @@ class Api:
         """
         self.client_id = client_id
         self.client_secret = client_secret
+        self.verbose = verbose
         self.proxies = proxies
         self.timeout = 60
         session = requests.Session()
@@ -88,7 +91,6 @@ class Api:
         headers = {"content-type": "application/x-www-form-urlencoded"}
         params = dict(realm="/partenaire")
         current_time = datetime.datetime.today()
-        print("Now requesting token")
         r = requests.post(
             url=ENDPOINT_ACCESS_TOKEN,
             headers=headers,
@@ -130,10 +132,12 @@ class Api:
         :returns: The headers necessary to do requests. Will ask a new token if it has expired since or it has never been requested
         """
         if not hasattr(self, "token"):
-            print("Token has not been requested yet. Requesting token")
+            if self.verbose:
+                print("Token has not been requested yet. Requesting token")
             self.get_token()
         elif self.is_expired():
-            print("Token is expired. Requesting new token")
+            if self.verbose:
+                print("Token is expired. Requesting new token")
             self.get_token()
         headers = {
             "Authorization": "Bearer {}".format(self.token["access_token"])
@@ -200,7 +204,8 @@ class Api:
         >>> params.update({"minCreationDate": "2020-01-01T00:00:00Z"})
         >>> client.search(params=params)
         """
-        print('Making request with params {}'.format(params))
+        if self.verbose:
+            print('Making request with params {}'.format(params))
         r = self.session.get(
             url=SEARCH_ENDPOINT,
             params=params,
